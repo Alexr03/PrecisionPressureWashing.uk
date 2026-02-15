@@ -3,6 +3,10 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-01',
   devtools: { enabled: true },
 
+  runtimeConfig: {
+    resendApiKey: process.env.RESEND_API_KEY || '',
+  },
+
   css: [
     '~/assets/css/main.css',
   ],

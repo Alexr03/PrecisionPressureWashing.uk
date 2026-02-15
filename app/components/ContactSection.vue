@@ -9,6 +9,7 @@ const form = reactive({
 
 const isSubmitting = ref(false)
 const isSubmitted = ref(false)
+const errorMessage = ref('')
 
 const services = [
   'Driveway Cleaning',
@@ -20,11 +21,22 @@ const services = [
   'Other',
 ]
 
-function handleSubmit() {
+async function handleSubmit() {
   isSubmitting.value = true
-  // Simulate submission (no backend wired up)
-  setTimeout(() => {
-    isSubmitting.value = false
+  errorMessage.value = ''
+
+  try {
+    await $fetch('/api/contact', {
+      method: 'POST',
+      body: {
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        service: form.service,
+        message: form.message,
+      },
+    })
+
     isSubmitted.value = true
     // Reset after showing success
     setTimeout(() => {
@@ -35,7 +47,13 @@ function handleSubmit() {
       form.service = ''
       form.message = ''
     }, 4000)
-  }, 1500)
+  }
+  catch {
+    errorMessage.value = 'Something went wrong. Please try again, or contact us by phone.'
+  }
+  finally {
+    isSubmitting.value = false
+  }
 }
 </script>
 
@@ -87,6 +105,16 @@ function handleSubmit() {
                 <p class="text-slate-400">We'll get back to you as soon as possible.</p>
               </div>
             </Transition>
+
+            <!-- Error State -->
+            <div v-if="errorMessage" class="mb-5 p-4 rounded-xl bg-red-500/10 border border-red-500/20">
+              <div class="flex items-center gap-3">
+                <svg class="w-5 h-5 text-red-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <p class="text-red-300 text-sm">{{ errorMessage }}</p>
+              </div>
+            </div>
 
             <!-- Form -->
             <form v-if="!isSubmitted" @submit.prevent="handleSubmit" class="space-y-5">
