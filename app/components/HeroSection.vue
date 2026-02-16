@@ -99,9 +99,9 @@ function scrollTo(selector: string) {
         style="opacity: 0; transform: translateY(40px); --hero-delay: 0.05s"
       >
         <img
-          src="/logo.png"
+          src="/logo_full.png"
           alt="Precision Pressure Washing"
-          class="h-20 sm:h-28 md:h-32 w-auto mx-auto drop-shadow-2xl"
+          class="h-60 sm:h-60 md:h-60 w-auto mx-auto drop-shadow-2xl"
         />
       </div>
 
