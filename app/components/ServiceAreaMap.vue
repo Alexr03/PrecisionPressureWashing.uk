@@ -9,12 +9,12 @@ onMounted(async () => {
 
   if (!mapContainer.value) return
 
-  // Basildon center coordinates
-  const basildonCenter: [number, number] = [51.5761, 0.4886]
+  // Essex center coordinates (roughly central Essex)
+  const essexCenter: [number, number] = [51.7343, 0.4691]
 
   map = L.map(mapContainer.value, {
-    center: basildonCenter,
-    zoom: 12,
+    center: essexCenter,
+    zoom: 9,
     zoomControl: false,
     attributionControl: false,
     scrollWheelZoom: false,
@@ -33,28 +33,47 @@ onMounted(async () => {
   L.control.attribution({ position: 'bottomleft', prefix: false }).addTo(map)
     .addAttribution('&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> &copy; <a href="https://carto.com/" target="_blank">CARTO</a>')
 
-  // Service area polygon — rough boundary of Basildon district
+  // Service area polygon — rough boundary of Essex county
   const serviceAreaCoords: [number, number][] = [
-    [51.6150, 0.4200],
-    [51.6200, 0.4450],
-    [51.6180, 0.4750],
-    [51.6120, 0.5050],
-    [51.6080, 0.5300],
-    [51.6000, 0.5500],
-    [51.5850, 0.5600],
-    [51.5700, 0.5650],
-    [51.5550, 0.5600],
-    [51.5400, 0.5500],
-    [51.5300, 0.5300],
-    [51.5280, 0.5050],
-    [51.5300, 0.4750],
-    [51.5350, 0.4450],
-    [51.5420, 0.4200],
-    [51.5520, 0.4050],
-    [51.5650, 0.4000],
-    [51.5800, 0.3980],
-    [51.5950, 0.4000],
-    [51.6080, 0.4100],
+    [51.5000, 0.0100],
+    [51.5200, -0.0200],
+    [51.5600, -0.0100],
+    [51.6000, 0.0000],
+    [51.6400, 0.0100],
+    [51.6800, 0.0200],
+    [51.7200, 0.0100],
+    [51.7600, 0.0200],
+    [51.8000, 0.0400],
+    [51.8400, 0.0600],
+    [51.8800, 0.1000],
+    [51.9200, 0.1500],
+    [51.9500, 0.2200],
+    [51.9700, 0.3000],
+    [51.9800, 0.4000],
+    [51.9800, 0.5000],
+    [51.9700, 0.6000],
+    [51.9500, 0.7000],
+    [51.9200, 0.8000],
+    [51.8800, 0.9000],
+    [51.8500, 0.9500],
+    [51.8200, 1.0000],
+    [51.7800, 1.0500],
+    [51.7400, 1.1000],
+    [51.7000, 1.1200],
+    [51.6600, 1.1000],
+    [51.6200, 1.0500],
+    [51.5800, 1.0000],
+    [51.5500, 0.9500],
+    [51.5300, 0.9000],
+    [51.5100, 0.8500],
+    [51.4900, 0.8000],
+    [51.4800, 0.7000],
+    [51.4700, 0.6000],
+    [51.4700, 0.5000],
+    [51.4700, 0.4000],
+    [51.4700, 0.3000],
+    [51.4800, 0.2000],
+    [51.4900, 0.1000],
   ]
 
   // Glowing service area polygon
@@ -93,24 +112,32 @@ onMounted(async () => {
     iconAnchor: [20, 20],
   })
 
-  L.marker(basildonCenter, { icon: pulseIcon }).addTo(map)
+  L.marker(essexCenter, { icon: pulseIcon }).addTo(map)
     .bindPopup(
       `<div style="text-align:center;font-family:'Oswald',sans-serif;padding:4px 0;">
         <strong style="font-size:14px;color:#1e293b;">Precision Pressure Washing</strong><br/>
-        <span style="font-size:12px;color:#64748b;">Serving the Basildon Area</span>
+        <span style="font-size:12px;color:#64748b;">Serving Basildon & All of Essex</span>
       </div>`,
       { className: 'custom-popup' }
     )
 
-  // Nearby areas labels
+  // Key areas across Essex
   const areas = [
     { name: 'Basildon', pos: [51.5761, 0.4886] as [number, number] },
-    { name: 'Laindon', pos: [51.5700, 0.4250] as [number, number] },
-    { name: 'Pitsea', pos: [51.5625, 0.5100] as [number, number] },
-    { name: 'Vange', pos: [51.5560, 0.4650] as [number, number] },
+    { name: 'Chelmsford', pos: [51.7356, 0.4685] as [number, number] },
+    { name: 'Southend-on-Sea', pos: [51.5459, 0.7077] as [number, number] },
+    { name: 'Colchester', pos: [51.8860, 0.8920] as [number, number] },
+    { name: 'Brentwood', pos: [51.6213, 0.3057] as [number, number] },
+    { name: 'Harlow', pos: [51.7727, 0.1099] as [number, number] },
+    { name: 'Braintree', pos: [51.8783, 0.5500] as [number, number] },
     { name: 'Wickford', pos: [51.6130, 0.5250] as [number, number] },
     { name: 'Billericay', pos: [51.6280, 0.4200] as [number, number] },
-    { name: 'Langdon Hills', pos: [51.5580, 0.4400] as [number, number] },
+    { name: 'Rayleigh', pos: [51.5862, 0.6046] as [number, number] },
+    { name: 'Grays', pos: [51.4750, 0.3250] as [number, number] },
+    { name: 'Canvey Island', pos: [51.5210, 0.5780] as [number, number] },
+    { name: 'Maldon', pos: [51.7314, 0.6753] as [number, number] },
+    { name: 'Witham', pos: [51.7960, 0.6380] as [number, number] },
+    { name: 'Loughton', pos: [51.6465, 0.0555] as [number, number] },
   ]
 
   areas.forEach((area) => {
@@ -158,8 +185,8 @@ onBeforeUnmount(() => {
         </h2>
         <div class="section-divider mb-6" />
         <p class="max-w-2xl mx-auto text-slate-400 text-lg leading-relaxed">
-          Currently serving the Basildon area and surrounding neighbourhoods.
-          Contact us to check if we cover your location.
+           Proudly serving Basildon and the entire Essex county.
+          From Southend to Colchester, Harlow to Grays — we've got you covered.
         </p>
       </div>
 
@@ -189,7 +216,7 @@ onBeforeUnmount(() => {
       <!-- Area Tags -->
       <div class="flex flex-wrap justify-center gap-3 mt-10 scroll-reveal">
         <span
-          v-for="area in ['Basildon', 'Laindon', 'Pitsea', 'Vange', 'Wickford', 'Billericay', 'Langdon Hills']"
+          v-for="area in ['Basildon', 'Chelmsford', 'Southend-on-Sea', 'Colchester', 'Brentwood', 'Harlow', 'Braintree', 'Wickford', 'Billericay', 'Rayleigh', 'Grays', 'Canvey Island', 'Maldon', 'Witham', 'Loughton']"
           :key="area"
           class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.04] border border-white/[0.08] text-slate-300 text-sm font-medium
                  hover:bg-blue-500/10 hover:border-blue-500/20 hover:text-white transition-all duration-300 cursor-default"

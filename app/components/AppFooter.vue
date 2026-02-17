@@ -40,8 +40,8 @@ function scrollToSection(href: string) {
             class="h-12 w-auto mb-5 mx-auto md:mx-0"
           />
           <p class="text-slate-500 text-sm leading-relaxed mb-5">
-            Professional driveway & patio cleaning experts. Fully insured with free quotes
-            and friendly local service.
+            Professional driveway & patio cleaning experts serving Basildon and the whole of Essex.
+            Fully insured with free quotes.
           </p>
 
           <!-- Social Media Links -->
@@ -159,7 +159,7 @@ function scrollToSection(href: string) {
           &copy; {{ currentYear }} Precision Pressure Washing. All rights reserved.
         </p>
         <p class="text-slate-700 text-xs">
-          Serving your local area with pride
+          Serving Basildon & Essex with pride
         </p>
       </div>
     </div>

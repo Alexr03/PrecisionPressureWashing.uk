@@ -273,8 +273,8 @@ async function handleSubmit() {
                 </div>
                 <div>
                   <h4 class="font-display font-semibold text-white mb-1">Service Area</h4>
-                  <p class="text-slate-300 font-medium">Serving Your Local Area</p>
-                  <p class="text-slate-500 text-sm mt-1">Contact us to check availability in your area</p>
+                  <p class="text-slate-300 font-medium">Serving Basildon & All of Essex</p>
+                  <p class="text-slate-500 text-sm mt-1">Covering the entire Essex county</p>
                 </div>
               </div>
             </div>

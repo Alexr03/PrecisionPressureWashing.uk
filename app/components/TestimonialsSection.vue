@@ -2,19 +2,19 @@
 const testimonials = [
   {
     name: 'Sarah M.',
-    location: 'Local Resident',
+    location: 'Basildon, Essex',
     text: 'Absolutely brilliant job on our driveway! It looks brand new. The team were professional, on time, and left everything tidy. Would highly recommend to anyone.',
     rating: 5,
   },
   {
     name: 'James T.',
-    location: 'Local Resident',
+    location: 'Chelmsford, Essex',
     text: 'Had our patio and paths done — the difference is incredible. You don\'t realise how dirty they\'ve got until you see the before and after. Great value for money too.',
     rating: 5,
   },
   {
     name: 'Linda & Steve P.',
-    location: 'Local Residents',
+    location: 'Southend-on-Sea, Essex',
     text: 'We\'ve used Precision twice now for our driveway and decking. Always reliable, always a fantastic finish. Wouldn\'t go anywhere else. Five stars!',
     rating: 5,
   },

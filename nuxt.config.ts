@@ -32,7 +32,7 @@ export default defineNuxtConfig({
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         {
           name: 'description',
-          content: 'Professional pressure washing services for driveways, patios, paths & decking. Fully insured, free quotes, friendly local service. Call 07912 606539.',
+          content: 'Professional pressure washing services across Basildon & Essex. Driveways, patios, paths & decking. Fully insured, free quotes. Call 07912 606539.',
         },
         { name: 'theme-color', content: '#0a1628' },
 
@@ -42,7 +42,7 @@ export default defineNuxtConfig({
         { property: 'og:title', content: 'Precision Pressure Washing | Driveway & Patio Cleaning Experts' },
         {
           property: 'og:description',
-          content: 'Professional pressure washing services for driveways, patios, paths & decking. Fully insured, free quotes, friendly local service. Call 07912 606539.',
+          content: 'Professional pressure washing services across Basildon & Essex. Driveways, patios, paths & decking. Fully insured, free quotes. Call 07912 606539.',
         },
         { property: 'og:image', content: 'https://precisionpressurewashing.uk/og-image.png' },
         { property: 'og:image:width', content: '1200' },
@@ -56,7 +56,7 @@ export default defineNuxtConfig({
         { name: 'twitter:title', content: 'Precision Pressure Washing | Driveway & Patio Cleaning Experts' },
         {
           name: 'twitter:description',
-          content: 'Professional pressure washing services for driveways, patios, paths & decking. Fully insured, free quotes, friendly local service. Call 07912 606539.',
+          content: 'Professional pressure washing services across Basildon & Essex. Driveways, patios, paths & decking. Fully insured, free quotes. Call 07912 606539.',
         },
         { name: 'twitter:image', content: 'https://precisionpressurewashing.uk/og-image.png' },
       ],

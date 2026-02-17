@@ -15,7 +15,7 @@ const items: BeforeAfterItem[] = [
   {
     id: 1,
     title: 'Driveway Restoration',
-    description: 'Block paving driveway in Basildon — years of dirt, moss and oil stains completely removed.',
+    description: 'Block paving driveway in Essex — years of dirt, moss and oil stains completely removed.',
     beforeLabel: 'Before',
     afterLabel: 'After',
     beforeGradient: 'linear-gradient(135deg, #2d1f0e 0%, #3d2b15 30%, #4a3520 50%, #3d2b15 70%, #2d1f0e 100%)',
