@@ -2,6 +2,9 @@
 const mapContainer = ref<HTMLElement | null>(null)
 let map: any = null
 
+// ⚡ Set to true to enable draggable polygon vertex editing
+const DEBUG_EDIT_MODE = false
+
 onMounted(async () => {
   // Dynamically import Leaflet (client-side only)
   const L = (await import('leaflet')).default
@@ -35,50 +38,77 @@ onMounted(async () => {
 
   // Service area polygon — rough boundary of Essex county
   const serviceAreaCoords: [number, number][] = [
-    [51.5000, 0.0100],
-    [51.5200, -0.0200],
-    [51.5600, -0.0100],
-    [51.6000, 0.0000],
-    [51.6400, 0.0100],
-    [51.6800, 0.0200],
-    [51.7200, 0.0100],
-    [51.7600, 0.0200],
-    [51.8000, 0.0400],
-    [51.8400, 0.0600],
-    [51.8800, 0.1000],
-    [51.9200, 0.1500],
-    [51.9500, 0.2200],
-    [51.9700, 0.3000],
-    [51.9800, 0.4000],
-    [51.9800, 0.5000],
-    [51.9700, 0.6000],
-    [51.9500, 0.7000],
-    [51.9200, 0.8000],
-    [51.8800, 0.9000],
-    [51.8500, 0.9500],
-    [51.8200, 1.0000],
-    [51.7800, 1.0500],
-    [51.7400, 1.1000],
-    [51.7000, 1.1200],
-    [51.6600, 1.1000],
-    [51.6200, 1.0500],
-    [51.5800, 1.0000],
-    [51.5500, 0.9500],
-    [51.5300, 0.9000],
-    [51.5100, 0.8500],
-    [51.4900, 0.8000],
-    [51.4800, 0.7000],
-    [51.4700, 0.6000],
-    [51.4700, 0.5000],
-    [51.4700, 0.4000],
-    [51.4700, 0.3000],
-    [51.4800, 0.2000],
-    [51.4900, 0.1000],
-  ]
+    [51.478, 0.232],
+    [51.485, 0.211],
+    [51.487, 0.178],
+    [51.505, 0.171],
+    [51.514, 0.127],
+    [51.507, 0.080],
+    [51.556, 0.024],
+    [51.580, 0.022],
+    [51.610, 0.007],
+    [51.630, -0.012],
+    [51.660, -0.010],
+    [51.686, -0.001],
+    [51.700, 0.022],
+    [51.720, 0.060],
+    [51.750, 0.082],
+    [51.762, 0.118],
+    [51.780, 0.150],
+    [51.800, 0.160],
+    [51.840, 0.152],
+    [51.868, 0.163],
+    [51.900, 0.182],
+    [51.930, 0.222],
+    [51.970, 0.242],
+    [52.002, 0.262],
+    [52.038, 0.348],
+    [52.050, 0.420],
+    [52.042, 0.510],
+    [52.018, 0.582],
+    [51.990, 0.650],
+    [51.970, 0.718],
+    [51.960, 0.800],
+    [51.948, 0.900],
+    [51.940, 1.000],
+    [51.952, 1.100],
+    [51.962, 1.182],
+    [51.952, 1.272],
+    [51.943, 1.302],
+    [51.910, 1.298],
+    [51.861, 1.301],
+    [51.806, 1.223],
+    [51.767, 1.121],
+    [51.766, 1.046],
+    [51.768, 0.955],
+    [51.738, 0.960],
+    [51.710, 0.956],
+    [51.679, 0.959],
+    [51.652, 0.962],
+    [51.619, 0.963],
+    [51.593, 0.940],
+    [51.561, 0.894],
+    [51.535, 0.836],
+    [51.516, 0.775],
+    [51.528, 0.715],
+    [51.521, 0.659],
+    [51.506, 0.593],
+    [51.506, 0.542],
+    [51.499, 0.481],
+    [51.488, 0.445],
+    [51.454, 0.432],
+    [51.448, 0.348],
+    [51.469, 0.315],
+    [51.459, 0.282],
+  ];
 
-  // Glowing service area polygon
-  // Outer glow layer
-  L.polygon(serviceAreaCoords, {
+  // Mutable copy for editing (only used in debug mode)
+  const editableCoords: [number, number][] = DEBUG_EDIT_MODE
+    ? serviceAreaCoords.map(c => [...c] as [number, number])
+    : serviceAreaCoords
+
+  // Glowing service area polygon — outer glow layer
+  const glowPolygon = L.polygon(editableCoords, {
     color: '#3b82f6',
     weight: 1,
     opacity: 0.15,
@@ -88,7 +118,7 @@ onMounted(async () => {
   }).addTo(map)
 
   // Main boundary
-  const serviceArea = L.polygon(serviceAreaCoords, {
+  const serviceArea = L.polygon(editableCoords, {
     color: '#60a5fa',
     weight: 2,
     opacity: 0.6,
@@ -97,6 +127,16 @@ onMounted(async () => {
     smoothFactor: 2,
     dashArray: '8, 6',
   }).addTo(map)
+
+  // Helper: redraw polygons and print coords to console
+  function updatePolygons() {
+    glowPolygon.setLatLngs(editableCoords)
+    serviceArea.setLatLngs(editableCoords)
+    const output = editableCoords
+      .map(c => `  [${c[0].toFixed(3)}, ${c[1].toFixed(3)}],`)
+      .join('\n')
+    console.log('// Updated serviceAreaCoords:\n[\n' + output + '\n]')
+  }
 
   // Pulsing center marker
   const pulseIcon = L.divIcon({
@@ -150,6 +190,47 @@ onMounted(async () => {
     L.marker(area.pos, { icon: labelIcon, interactive: false }).addTo(map)
   })
 
+  // DRAGGABLE numbered markers at each polygon vertex (debug mode only)
+  if (DEBUG_EDIT_MODE) {
+    editableCoords.forEach((coord, i) => {
+      const debugIcon = L.divIcon({
+        html: `<div style="
+          background: rgba(239,68,68,0.85);
+          color: #fff;
+          font-size: 10px;
+          font-weight: bold;
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid #fff;
+          font-family: monospace;
+          cursor: grab;
+        ">${i}</div>`,
+        className: '',
+        iconSize: [20, 20],
+        iconAnchor: [10, 10],
+      })
+      const marker = L.marker(coord, { icon: debugIcon, draggable: true })
+        .addTo(map)
+        .bindTooltip(`#${i}: [${coord[1].toFixed(3)}, ${coord[0].toFixed(3)}]`, { permanent: false })
+
+      marker.on('drag', (e: any) => {
+        const pos = e.target.getLatLng()
+        editableCoords[i] = [pos.lat, pos.lng]
+        glowPolygon.setLatLngs(editableCoords)
+        serviceArea.setLatLngs(editableCoords)
+        marker.setTooltipContent(`#${i}: [${pos.lng.toFixed(3)}, ${pos.lat.toFixed(3)}]`)
+      })
+
+      marker.on('dragend', () => {
+        updatePolygons()
+      })
+    })
+  }
+
   // Enable scroll zoom when map is focused
   mapContainer.value.addEventListener('click', () => {
     map.scrollWheelZoom.enable()
@@ -172,7 +253,8 @@ onBeforeUnmount(() => {
   <section id="service-area" class="relative py-24 sm:py-32 overflow-hidden">
     <!-- Background -->
     <div class="absolute inset-0 bg-gradient-to-b from-[#060e1a] via-[#0a1628] to-[#060e1a]" />
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full bg-gradient-radial from-blue-600/8 via-transparent to-transparent blur-3xl" />
+    <div
+      class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full bg-gradient-radial from-blue-600/8 via-transparent to-transparent blur-3xl" />
 
     <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Section Header -->
@@ -185,7 +267,7 @@ onBeforeUnmount(() => {
         </h2>
         <div class="section-divider mb-6" />
         <p class="max-w-2xl mx-auto text-slate-400 text-lg leading-relaxed">
-           Proudly serving Basildon and the entire Essex county.
+          Proudly serving Basildon and the entire Essex county.
           From Southend to Colchester, Harlow to Grays — we've got you covered.
         </p>
       </div>
@@ -194,16 +276,16 @@ onBeforeUnmount(() => {
       <div class="scroll-reveal-scale">
         <div class="glass-card p-2 sm:p-3 overflow-hidden">
           <ClientOnly>
-            <div
-              ref="mapContainer"
-              class="w-full h-[400px] sm:h-[500px] lg:h-[550px] rounded-xl overflow-hidden"
-              style="z-index: 0;"
-            />
+            <div ref="mapContainer" class="w-full h-[400px] sm:h-[500px] lg:h-[550px] rounded-xl overflow-hidden"
+              style="z-index: 0;" />
             <template #fallback>
-              <div class="w-full h-[400px] sm:h-[500px] lg:h-[550px] rounded-xl bg-navy-mid/50 flex items-center justify-center">
+              <div
+                class="w-full h-[400px] sm:h-[500px] lg:h-[550px] rounded-xl bg-navy-mid/50 flex items-center justify-center">
                 <div class="text-center">
-                  <svg class="w-12 h-12 text-blue-500/40 mx-auto mb-3 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                  <svg class="w-12 h-12 text-blue-500/40 mx-auto mb-3 animate-pulse" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                      d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                   </svg>
                   <p class="text-slate-500 text-sm">Loading map...</p>
                 </div>
@@ -219,10 +301,10 @@ onBeforeUnmount(() => {
           v-for="area in ['Basildon', 'Chelmsford', 'Southend-on-Sea', 'Colchester', 'Brentwood', 'Harlow', 'Braintree', 'Wickford', 'Billericay', 'Rayleigh', 'Grays', 'Canvey Island', 'Maldon', 'Witham', 'Loughton']"
           :key="area"
           class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.04] border border-white/[0.08] text-slate-300 text-sm font-medium
-                 hover:bg-blue-500/10 hover:border-blue-500/20 hover:text-white transition-all duration-300 cursor-default"
-        >
+                 hover:bg-blue-500/10 hover:border-blue-500/20 hover:text-white transition-all duration-300 cursor-default">
           <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
           </svg>
           {{ area }}
         </span>
