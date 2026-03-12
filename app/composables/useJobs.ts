@@ -127,6 +127,32 @@ export const jobs: Job[] = [
       }
     ],
   },
+  {
+    id: 'job_4',
+    title: 'Patio & Flooring Restoration',
+    description: 'Complete pressure wash and restoration of outdoor flooring.',
+    thumbnail: '/comparisons/job_4/1/after.jpeg',
+    items: [
+      {
+        id: 1,
+        title: 'Cleaned Flooring',
+        description: '',
+        beforeLabel: 'Before',
+        afterLabel: 'After',
+        beforeImage: '/comparisons/job_4/1/before.jpeg',
+        afterImage: '/comparisons/job_4/1/after.jpeg',
+      },
+      {
+        id: 2,
+        title: 'Cleaned Flooring',
+        description: '',
+        beforeLabel: 'Before',
+        afterLabel: 'After',
+        beforeImage: '/comparisons/job_4/2/before.jpeg',
+        afterImage: '/comparisons/job_4/2/after.jpeg',
+      },
+    ],
+  },
 ]
 
 export function useJobs() {
