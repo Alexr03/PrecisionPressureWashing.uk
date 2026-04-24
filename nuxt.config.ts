@@ -4,7 +4,10 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
 
   runtimeConfig: {
-    resendApiKey: process.env.RESEND_API_KEY || '',
+    smtpHost: process.env.SMTP_HOST || 'smtp.protonmail.ch',
+    smtpPort: Number(process.env.SMTP_PORT) || 587,
+    smtpUser: process.env.SMTP_USER || '',
+    smtpPass: process.env.SMTP_PASS || '',
   },
 
   css: [

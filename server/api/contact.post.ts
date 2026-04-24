@@ -1,4 +1,4 @@
-import { Resend } from 'resend'
+import nodemailer from 'nodemailer'
 
 interface ContactForm {
   name: string
@@ -11,7 +11,7 @@ interface ContactForm {
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
 
-  if (!config.resendApiKey) {
+  if (!config.smtpUser || !config.smtpPass) {
     throw createError({
       statusCode: 500,
       statusMessage: 'Email service is not configured.',
@@ -31,7 +31,17 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Service selection is required.' })
   }
 
-  const resend = new Resend(config.resendApiKey)
+  const port = Number(config.smtpPort) || 587
+  const transporter = nodemailer.createTransport({
+    host: config.smtpHost,
+    port,
+    secure: port === 465,
+    requireTLS: port !== 465,
+    auth: {
+      user: config.smtpUser,
+      pass: config.smtpPass,
+    },
+  })
 
   const emailLines = [
     `<h2>New Quote Request</h2>`,
@@ -45,26 +55,17 @@ export default defineEventHandler(async (event) => {
   ].filter(Boolean).join('\n')
 
   try {
-    const { error } = await resend.emails.send({
-      from: 'Precision Pressure Washing <noreply@precisionpressurewashing.uk>',
-      to: ['contact@precisionpressurewashing.uk'],
+    await transporter.sendMail({
+      from: 'Precision Pressure Washing <info@precisionpressurewashing.uk>',
+      to: 'contact@precisionpressurewashing.uk',
       subject: `New Quote Request — ${body.service} — ${body.name}`,
       html: emailLines,
       replyTo: body.email || undefined,
     })
 
-    if (error) {
-      console.error('Resend error:', error)
-      throw createError({
-        statusCode: 500,
-        statusMessage: 'Failed to send email. Please try again later.',
-      })
-    }
-
     return { success: true }
   }
   catch (err: any) {
-    // Re-throw if it's already a createError
     if (err.statusCode) throw err
 
     console.error('Email send error:', err)
