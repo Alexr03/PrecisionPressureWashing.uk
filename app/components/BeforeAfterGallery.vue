@@ -37,38 +37,49 @@ function scrollToContact() {
           :class="`stagger-${index + 1}`"
         >
           <div class="glass-card overflow-hidden transition-all duration-500 hover:border-blue-500/30 hover:shadow-lg hover:shadow-blue-500/10 hover:-translate-y-1">
-            <!-- Thumbnail — split before/after preview -->
+            <!-- Thumbnail — split before/after preview when the first item is a comparison, otherwise a single static image -->
             <div class="relative w-full aspect-[4/3] overflow-hidden">
-              <!-- After image (full) -->
-              <img
-                :src="job.items[0]?.afterImage"
-                :alt="`${job.title} — After`"
-                class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                loading="lazy"
-              />
-              <!-- Before image (left half) -->
-              <div
-                class="absolute inset-0"
-                style="clip-path: inset(0 50% 0 0)"
-              >
+              <template v-if="job.items[0]?.type === 'comparison'">
+                <!-- After image (full) -->
                 <img
-                  :src="job.items[0]?.beforeImage"
-                  :alt="`${job.title} — Before`"
+                  :src="job.items[0].afterImage"
+                  :alt="`${job.title} — After`"
                   class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   loading="lazy"
                 />
-              </div>
+                <!-- Before image (left half) -->
+                <div
+                  class="absolute inset-0"
+                  style="clip-path: inset(0 50% 0 0)"
+                >
+                  <img
+                    :src="job.items[0].beforeImage"
+                    :alt="`${job.title} — Before`"
+                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                </div>
 
-              <!-- Divider line -->
-              <div class="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-0.5 bg-white/80 shadow-[0_0_12px_rgba(255,255,255,0.4)] z-10" />
+                <!-- Divider line -->
+                <div class="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-0.5 bg-white/80 shadow-[0_0_12px_rgba(255,255,255,0.4)] z-10" />
 
-              <!-- Before / After labels -->
-              <div class="absolute top-3 left-3 bg-red-500/90 backdrop-blur-sm text-white text-[10px] font-display font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full z-[5]">
-                Before
-              </div>
-              <div class="absolute top-3 right-3 bg-green-500/90 backdrop-blur-sm text-white text-[10px] font-display font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full z-[5]">
-                After
-              </div>
+                <!-- Before / After labels -->
+                <div class="absolute top-3 left-3 bg-red-500/90 backdrop-blur-sm text-white text-[10px] font-display font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full z-[5]">
+                  Before
+                </div>
+                <div class="absolute top-3 right-3 bg-green-500/90 backdrop-blur-sm text-white text-[10px] font-display font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full z-[5]">
+                  After
+                </div>
+              </template>
+
+              <template v-else-if="job.items[0]?.type === 'static'">
+                <img
+                  :src="job.thumbnail || job.items[0].image"
+                  :alt="job.title"
+                  class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  loading="lazy"
+                />
+              </template>
 
               <!-- Photo count badge -->
               <div class="absolute bottom-3 right-3 bg-black/60 backdrop-blur-sm text-white text-xs font-display font-medium px-3 py-1 rounded-full z-[5] flex items-center gap-1.5">

@@ -47,7 +47,7 @@ function scrollToSection(href: string) {
           <!-- Social Media Links -->
           <div class="flex items-center gap-3 justify-center md:justify-start">
             <a
-              href="https://www.facebook.com/profile.php?id=61575694498498"
+              href="https://www.facebook.com/profile.php?id=61574513161868"
               target="_blank"
               rel="noopener"
               aria-label="Facebook"
@@ -58,7 +58,7 @@ function scrollToSection(href: string) {
               </svg>
             </a>
             <a
-              href="https://www.instagram.com/precisionpressurewashing_uk"
+              href="https://www.instagram.com/precisionpressurewashing.uk"
               target="_blank"
               rel="noopener"
               aria-label="Instagram"
@@ -69,7 +69,7 @@ function scrollToSection(href: string) {
               </svg>
             </a>
             <a
-              href="https://www.tiktok.com/@precisionpressurewashing_uk"
+              href="https://www.tiktok.com/@precision.pressur8"
               target="_blank"
               rel="noopener"
               aria-label="TikTok"

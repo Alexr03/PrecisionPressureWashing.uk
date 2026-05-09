@@ -1,24 +1,18 @@
 <script setup lang="ts">
-const testimonials = [
-  {
-    name: 'Sarah M.',
-    location: 'Basildon, Essex',
-    text: 'Absolutely brilliant job on our driveway! It looks brand new. The team were professional, on time, and left everything tidy. Would highly recommend to anyone.',
-    rating: 5,
-  },
-  {
-    name: 'James T.',
-    location: 'Chelmsford, Essex',
-    text: 'Had our patio and paths done — the difference is incredible. You don\'t realise how dirty they\'ve got until you see the before and after. Great value for money too.',
-    rating: 5,
-  },
-  {
-    name: 'Linda & Steve P.',
-    location: 'Southend-on-Sea, Essex',
-    text: 'We\'ve used Precision twice now for our driveway and decking. Always reliable, always a fantastic finish. Wouldn\'t go anywhere else. Five stars!',
-    rating: 5,
-  },
-]
+const { jobs } = useJobs()
+
+const testimonials = computed(() =>
+  jobs
+    .filter(job => job.review)
+    .map(job => ({
+      jobId: job.id,
+      name: job.review!.author,
+      location: job.review!.location,
+      text: job.review!.text,
+      rating: job.review!.rating ?? 5,
+      date: job.review!.date,
+    })),
+)
 </script>
 
 <template>
@@ -39,14 +33,15 @@ const testimonials = [
       </div>
 
       <!-- Testimonials Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-        <div
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6 lg:gap-8">
+        <NuxtLink
           v-for="(testimonial, index) in testimonials"
-          :key="testimonial.name"
-          class="scroll-reveal"
+          :key="testimonial.jobId"
+          :to="`/gallery/${testimonial.jobId}`"
+          class="scroll-reveal group"
           :class="`stagger-${index + 1}`"
         >
-          <div class="glass-card p-8 h-full flex flex-col">
+          <div class="glass-card p-8 h-full flex flex-col transition-all duration-500 group-hover:border-blue-500/30 group-hover:-translate-y-1">
             <!-- Stars -->
             <div class="flex gap-1 mb-5">
               <svg
@@ -61,7 +56,7 @@ const testimonials = [
             </div>
 
             <!-- Quote -->
-            <blockquote class="text-slate-300 text-sm leading-relaxed mb-6 flex-1 italic">
+            <blockquote class="text-slate-300 text-sm leading-relaxed mb-6 flex-1 italic whitespace-pre-line">
               "{{ testimonial.text }}"
             </blockquote>
 
@@ -72,13 +67,17 @@ const testimonials = [
                   {{ testimonial.name.charAt(0) }}
                 </span>
               </div>
-              <div>
-                <p class="text-white font-medium text-sm">{{ testimonial.name }}</p>
-                <p class="text-slate-500 text-xs">{{ testimonial.location }}</p>
+              <div class="min-w-0">
+                <p class="text-white font-medium text-sm group-hover:text-blue-400 transition-colors duration-300">{{ testimonial.name }}</p>
+                <p v-if="testimonial.location || testimonial.date" class="text-slate-500 text-xs truncate">
+                  <template v-if="testimonial.location">{{ testimonial.location }}</template>
+                  <template v-if="testimonial.location && testimonial.date"> · </template>
+                  <template v-if="testimonial.date">{{ testimonial.date }}</template>
+                </p>
               </div>
             </div>
           </div>
-        </div>
+        </NuxtLink>
       </div>
     </div>
   </section>

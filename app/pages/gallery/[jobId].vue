@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { BeforeAfterItem } from '~/composables/useJobs'
+import type { GalleryItem } from '~/composables/useJobs'
 
 const route = useRoute()
 const { getJobById } = useJobs()
@@ -30,7 +30,7 @@ const activeSlider = ref<number | null>(null)
 
 // Modal state
 const modalOpen = ref(false)
-const modalItem = ref<BeforeAfterItem | null>(null)
+const modalItem = ref<GalleryItem | null>(null)
 const modalSliderPosition = ref(50)
 const isModalDragging = ref(false)
 
@@ -77,7 +77,7 @@ function handleContainerClick(index: number, event: MouseEvent) {
 }
 
 // ── Modal logic ──
-function openModal(item: BeforeAfterItem) {
+function openModal(item: GalleryItem) {
   modalItem.value = item
   modalSliderPosition.value = 50
   modalOpen.value = true
@@ -169,28 +169,76 @@ function scrollToContact() {
       </NuxtLink>
 
       <!-- Page Header -->
-      <div class="mb-12 sm:mb-16 scroll-reveal">
-        <div class="flex items-center gap-3 mb-3">
-          <div class="w-1 h-10 rounded-full bg-gradient-to-b from-blue-400 to-cyan-400" />
-          <h1 class="font-display font-bold text-3xl sm:text-4xl md:text-5xl text-white tracking-tight">
-            {{ job.title }}
-          </h1>
+      <div class="mb-12 sm:mb-16 grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10 items-start">
+        <div class="lg:col-span-2 scroll-reveal">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-1 h-10 rounded-full bg-gradient-to-b from-blue-400 to-cyan-400" />
+            <h1 class="font-display font-bold text-3xl sm:text-4xl md:text-5xl text-white tracking-tight">
+              {{ job.title }}
+            </h1>
+          </div>
+          <p class="text-slate-400 text-lg leading-relaxed ml-[1.15rem] pl-3">
+            {{ job.description }}
+          </p>
+          <p class="text-slate-500 text-sm mt-2 ml-[1.15rem] pl-3">
+            {{ job.items.length }} photo{{ job.items.length !== 1 ? 's' : '' }}<template
+              v-if="job.items.some(i => i.type === 'comparison')"> · Drag the slider to reveal the
+              transformation</template>
+          </p>
         </div>
-        <p class="text-slate-400 text-lg leading-relaxed ml-[1.15rem] pl-3">
-          {{ job.description }}
-        </p>
-        <p class="text-slate-500 text-sm mt-2 ml-[1.15rem] pl-3">
-          {{ job.items.length }} comparison{{ job.items.length !== 1 ? 's' : '' }} · Drag the slider to reveal the
-          transformation
-        </p>
+
+        <!-- Customer Review -->
+        <aside v-if="job.review" class="lg:col-span-1 scroll-reveal stagger-2">
+          <figure
+            class="glass-card relative p-6 sm:p-7 border border-white/[0.08] hover:border-blue-500/20 transition-colors duration-500">
+            <!-- Quote glyph -->
+            <svg class="absolute top-4 right-4 w-9 h-9 text-blue-400/15" fill="currentColor" viewBox="0 0 24 24"
+              aria-hidden="true">
+              <path
+                d="M9.983 3v7.391C9.983 16.095 6.07 19.347 1 20l-.85-1.456c2.776-.9 4.704-3.18 4.704-5.184H1V3h8.983zM23 3v7.391c0 5.704-3.913 8.956-8.983 9.609L13.167 18.544c2.776-.9 4.704-3.18 4.704-5.184H14V3h9z" />
+            </svg>
+
+            <!-- Stars -->
+            <div v-if="job.review.rating" class="flex gap-1 mb-4">
+              <svg v-for="star in job.review.rating" :key="star" class="w-4 h-4 text-yellow-400" fill="currentColor"
+                viewBox="0 0 20 20">
+                <path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+            </div>
+
+            <!-- Quote -->
+            <blockquote class="text-slate-300 text-sm leading-relaxed italic whitespace-pre-line">
+              "{{ job.review.text }}"
+            </blockquote>
+
+            <!-- Author -->
+            <figcaption class="flex items-center gap-3 pt-5 mt-5 border-t border-white/[0.06]">
+              <div
+                class="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center flex-shrink-0">
+                <span class="text-white font-display font-bold text-xs">
+                  {{ job.review.author.charAt(0) }}
+                </span>
+              </div>
+              <div class="min-w-0">
+                <p class="text-white font-medium text-sm truncate">{{ job.review.author }}</p>
+                <p v-if="job.review.location || job.review.date" class="text-slate-500 text-xs truncate">
+                  <template v-if="job.review.location">{{ job.review.location }}</template>
+                  <template v-if="job.review.location && job.review.date"> · </template>
+                  <template v-if="job.review.date">{{ job.review.date }}</template>
+                </p>
+              </div>
+            </figcaption>
+          </figure>
+        </aside>
       </div>
 
       <!-- Gallery Grid — 2 columns on md+, 1 on mobile -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
         <div v-for="(item, index) in job.items" :key="item.id" class="scroll-reveal" :class="`stagger-${index + 1}`">
           <div class="glass-card overflow-hidden group">
-            <!-- Slider Container -->
-            <div :id="`ba-container-${index}`"
+            <!-- Comparison Slider -->
+            <div v-if="item.type === 'comparison'" :id="`ba-container-${index}`"
               class="relative w-full aspect-[4/3] cursor-ew-resize select-none overflow-hidden"
               @mousedown="startDrag(index, $event)" @touchstart="startDrag(index, $event)"
               @click="handleContainerClick(index, $event)">
@@ -246,6 +294,17 @@ function scrollToContact() {
                 </div>
               </div>
             </div>
+
+            <!-- Static Image -->
+            <button v-else type="button"
+              class="relative block w-full aspect-[4/3] overflow-hidden cursor-zoom-in"
+              @click="openModal(item)">
+              <img :src="item.image" :alt="item.title"
+                class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                loading="lazy" />
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            </button>
 
             <!-- Info + Enlarge Button -->
             <div class="p-5 flex items-start justify-between gap-4">
@@ -305,8 +364,8 @@ function scrollToContact() {
               <p class="text-slate-400 text-sm mt-1">{{ modalItem.description }}</p>
             </div>
 
-            <!-- Slider Container -->
-            <div id="modal-ba-container"
+            <!-- Slider Container (comparison) -->
+            <div v-if="modalItem.type === 'comparison'" id="modal-ba-container"
               class="relative w-full aspect-[4/3] sm:aspect-[16/10] cursor-ew-resize select-none overflow-hidden rounded-2xl border border-white/[0.08] shadow-2xl shadow-black/50"
               @mousedown="startModalDrag($event)" @touchstart="startModalDrag($event)"
               @click="handleModalClick($event)">
@@ -358,6 +417,13 @@ function scrollToContact() {
                   <span class="text-white text-sm font-medium">Drag to compare</span>
                 </div>
               </div>
+            </div>
+
+            <!-- Static Image -->
+            <div v-else
+              class="relative w-full overflow-hidden rounded-2xl border border-white/[0.08] shadow-2xl shadow-black/50 bg-black/40">
+              <img :src="modalItem.image" :alt="modalItem.title"
+                class="block w-full max-h-[80vh] object-contain" />
             </div>
           </div>
         </div>
