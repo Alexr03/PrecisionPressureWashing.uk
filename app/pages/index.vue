@@ -13,6 +13,7 @@ useSeoMeta({
 <template>
   <div>
     <HeroSection />
+    <StatsBar />
     <ServicesSection />
     <BeforeAfterGallery />
     <WhyChooseUs />

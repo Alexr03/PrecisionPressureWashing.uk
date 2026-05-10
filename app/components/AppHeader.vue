@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const isScrolled = ref(false)
 const isMobileMenuOpen = ref(false)
+const scrollProgress = ref(0)
 
 const navLinks = [
   { label: 'Services', href: '#services' },
@@ -13,6 +14,8 @@ const navLinks = [
 
 function handleScroll() {
   isScrolled.value = window.scrollY > 50
+  const max = document.documentElement.scrollHeight - window.innerHeight
+  scrollProgress.value = max > 0 ? Math.min(window.scrollY / max, 1) : 0
 }
 
 function scrollToSection(href: string) {
@@ -34,11 +37,17 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
+  <!-- Scroll progress bar -->
+  <div
+    class="scroll-progress"
+    :style="{ width: '100%', transform: `scaleX(${scrollProgress})` }"
+  />
+
   <header
     class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out"
     :class="[
       isScrolled
-        ? 'bg-[#060e1a]/90 backdrop-blur-xl shadow-lg shadow-black/20 border-b border-white/[0.04]'
+        ? 'bg-[#060e1a]/85 backdrop-blur-xl shadow-lg shadow-black/30 border-b border-blue-500/10'
         : 'bg-transparent',
     ]"
   >
@@ -50,11 +59,14 @@ onBeforeUnmount(() => {
           class="flex items-center gap-3 group"
           @click.prevent="scrollToSection('#hero')"
         >
-          <img
-            src="/logo.png"
-            alt="Precision Pressure Washing"
-            class="h-10 sm:h-12 w-auto transition-transform duration-300 group-hover:scale-105"
-          />
+          <div class="relative">
+            <div class="absolute inset-0 rounded-full bg-blue-500/30 blur-xl scale-75 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <img
+              src="/logo.png"
+              alt="Precision Pressure Washing"
+              class="relative h-10 sm:h-12 w-auto transition-transform duration-300 group-hover:scale-105 group-hover:drop-shadow-[0_0_8px_rgba(96,165,250,0.6)]"
+            />
+          </div>
         </a>
 
         <!-- Desktop Nav -->

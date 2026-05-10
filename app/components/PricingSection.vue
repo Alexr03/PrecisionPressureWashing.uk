@@ -77,17 +77,20 @@ const tiers = [
           ]"
         >
           <div
-            class="h-full flex flex-col rounded-2xl overflow-hidden transition-all duration-500"
+            class="h-full flex flex-col rounded-2xl overflow-hidden transition-all duration-500 relative"
             :class="[
               tier.highlighted
-                ? 'bg-gradient-to-b from-blue-600/15 to-blue-900/10 border-2 border-blue-500/30 shadow-xl shadow-blue-500/10'
-                : 'glass-card-hover',
+                ? 'conic-border bg-gradient-to-b from-blue-600/20 to-blue-900/15 shadow-xl shadow-blue-500/20 hover:shadow-cyan-500/30'
+                : 'glass-card-hover hover:-translate-y-1',
             ]"
           >
             <!-- Popular badge -->
-            <div v-if="tier.highlighted" class="bg-gradient-to-r from-blue-500 to-cyan-400 text-center py-2">
-              <span class="text-xs font-display font-bold uppercase tracking-widest text-white">
-                Most Popular
+            <div
+              v-if="tier.highlighted"
+              class="relative bg-gradient-to-r from-blue-500 via-cyan-400 to-blue-500 text-center py-2 overflow-hidden animate-gradient-x"
+            >
+              <span class="text-xs font-display font-bold uppercase tracking-widest text-white drop-shadow-[0_0_4px_rgba(255,255,255,0.4)]">
+                ✦ Most Popular ✦
               </span>
             </div>
 

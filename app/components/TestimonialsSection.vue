@@ -41,13 +41,19 @@ const testimonials = computed(() =>
           class="scroll-reveal group"
           :class="`stagger-${index + 1}`"
         >
-          <div class="glass-card p-8 h-full flex flex-col transition-all duration-500 group-hover:border-blue-500/30 group-hover:-translate-y-1">
+          <div class="glass-card relative p-8 h-full flex flex-col transition-all duration-500 group-hover:border-cyan-400/40 group-hover:-translate-y-1 group-hover:shadow-[0_20px_40px_-20px_rgba(59,130,246,0.4)] overflow-hidden">
+            <!-- Decorative quote mark -->
+            <svg class="absolute -top-2 -right-2 w-24 h-24 text-blue-500/[0.06] group-hover:text-cyan-400/15 transition-colors duration-500" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M9.5 16.5h-3l2-7h-3v-7h7v7l-3 7zm9 0h-3l2-7h-3v-7h7v7l-3 7z"/>
+            </svg>
+
             <!-- Stars -->
-            <div class="flex gap-1 mb-5">
+            <div class="relative flex gap-1 mb-5">
               <svg
                 v-for="star in testimonial.rating"
                 :key="star"
-                class="w-5 h-5 text-yellow-400"
+                class="w-5 h-5 text-yellow-400 transition-all duration-500 group-hover:drop-shadow-[0_0_6px_rgba(250,204,21,0.7)] group-hover:scale-110"
+                :style="{ transitionDelay: `${star * 50}ms` }"
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >
@@ -56,19 +62,19 @@ const testimonials = computed(() =>
             </div>
 
             <!-- Quote -->
-            <blockquote class="text-slate-300 text-sm leading-relaxed mb-6 flex-1 italic whitespace-pre-line">
+            <blockquote class="relative text-slate-300 text-sm leading-relaxed mb-6 flex-1 italic whitespace-pre-line">
               "{{ testimonial.text }}"
             </blockquote>
 
             <!-- Author -->
-            <div class="flex items-center gap-3 pt-5 border-t border-white/[0.06]">
-              <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center flex-shrink-0">
+            <div class="relative flex items-center gap-3 pt-5 border-t border-white/[0.06]">
+              <div class="relative w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center flex-shrink-0 group-hover:shadow-[0_0_16px_rgba(34,211,238,0.5)] transition-shadow duration-500">
                 <span class="text-white font-display font-bold text-sm">
                   {{ testimonial.name.charAt(0) }}
                 </span>
               </div>
               <div class="min-w-0">
-                <p class="text-white font-medium text-sm group-hover:text-blue-400 transition-colors duration-300">{{ testimonial.name }}</p>
+                <p class="text-white font-medium text-sm group-hover:text-cyan-300 transition-colors duration-300">{{ testimonial.name }}</p>
                 <p v-if="testimonial.location || testimonial.date" class="text-slate-500 text-xs truncate">
                   <template v-if="testimonial.location">{{ testimonial.location }}</template>
                   <template v-if="testimonial.location && testimonial.date"> · </template>
