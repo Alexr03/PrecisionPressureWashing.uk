@@ -12,7 +12,7 @@
   "dependencies": {
     "leaflet": "^1.9.4",
     "nodemailer": "^6.9.16",
-    "nuxt": "^4.3.1",
+    "nuxt": "^4.4.6",
     "vue": "^3.5.28"
   },
   "devDependencies": {
