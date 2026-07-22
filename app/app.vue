@@ -18,6 +18,8 @@ useSeoMeta({
         <img
           src="/logo_full.png"
           alt="Precision Pressure Washing"
+          width="640"
+          height="240"
           class="h-24 sm:h-28 w-auto mx-auto mb-6"
         />
         <p class="text-xs sm:text-sm uppercase tracking-[0.2em] text-cyan-300 mb-3 font-display">
@@ -32,10 +34,16 @@ useSeoMeta({
         </p>
 
         <div class="flex flex-col sm:flex-row gap-3 justify-center">
-          <a href="tel:07912606539" class="btn-gold">
+          <a href="tel:+447912606539" class="btn-gold" aria-label="Call us at 07912 606539">
             <span>Call 07912 606539</span>
           </a>
-          <a href="https://wa.me/4407912606539" target="_blank" rel="noopener" class="btn-outline">
+          <a
+            href="https://wa.me/447912606539"
+            target="_blank"
+            rel="noopener noreferrer nofollow"
+            class="btn-outline"
+            aria-label="Message us on WhatsApp (opens in new tab)"
+          >
             <span>Message on WhatsApp</span>
           </a>
         </div>
