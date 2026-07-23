@@ -3,8 +3,8 @@ WORKDIR /app
 
 # Install dependencies
 FROM base AS deps
-COPY package.json ./
-RUN npm install --ignore-scripts
+COPY package.json package-lock.json ./
+RUN npm ci --ignore-scripts
 
 # Build the application
 FROM deps AS build
